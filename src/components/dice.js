@@ -1,7 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 import { Canvas, useFrame } from '@react-three/fiber';
 import './dice.css';
-import React, { useState } from 'react';
+import React from 'react';
+import { useTexture } from '@react-three/drei';
 
 function Icosahedron(props) {
   const Mesh = React.useRef();
@@ -70,6 +71,12 @@ function RimLight({ brightness, color }) {
 }
 
 function Planes() {
+
+  const woodOcc = useTexture('./images/Stylized_Wood_Planks_001_ambientOcclusion.jpg');
+  const woodRough = useTexture('./images/Stylized_Wood_Planks_001_roughness.jpg');
+  const woodDisp = useTexture('./images/Stylized_Wood_Planks_001_height.png');
+  const woodNorm = useTexture('./images/Stylized_Wood_Planks_001_normal.jpg');
+  const woodColor = useTexture('./images/Stylized_Wood_Planks_001_basecolor.jpg');
   return (
     <>
       <mesh
@@ -81,21 +88,27 @@ function Planes() {
       </mesh>
       <mesh
         receiveShadow
-        position={[0, -2, 0]}
+        position={[0, 0, -5]}
       >
         <planeGeometry args={[55, 55]} />
-        <meshStandardMaterial color='grey' />
+        <meshStandardMaterial
+          color='grey'
+          // normalMap={woodNorm}
+          // map={woodColor}
+          // roughnessMap={woodRough}
+          // displacementMap={woodDisp}
+          // aoMap={woodOcc} 
+        />
       </mesh>
     </>
   );
 }
 
 export default function Dice() {
-  const [light, setLight] = useState(true);
   return (
     <div className='dice-div'>
       <Canvas>
-        {light && <KeyLight brightness={5.6} color={'#ffc9f9'} />}
+        <KeyLight brightness={5.6} color={'#ffc9f9'} />
         <FillLight brightness={2.6} color={'#bdefff'} />
         <RimLight brightness={54} color={'#fff'} />
         <Icosahedron />
